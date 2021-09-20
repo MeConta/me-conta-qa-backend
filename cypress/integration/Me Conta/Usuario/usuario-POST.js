@@ -30,7 +30,7 @@ describe('Me Conta?',()=>{
         }).as('response')
 
         cy.get('@response').then(res =>{
-            cy.log(res)
+          
             expect(res.status).to.be.eq(201)
             expect(res.body.UF).to.be.eq("AC")
             expect(res.body.cidade).to.be.eq("Acrelândia")
@@ -71,7 +71,7 @@ it('POST-Cadastro de usuário já cadastrado',()=>{
     }).as('response')
 
     cy.get('@response').then(res=>{
-        cy.log(res)
+       
         cy.expect(res.status).to.be.eq(422)
         cy.expect(res.body.message).to.be.eq("E-mail duplicado")
     })
