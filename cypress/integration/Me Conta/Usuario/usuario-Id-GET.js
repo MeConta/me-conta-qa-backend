@@ -10,11 +10,8 @@ describe('Me Conta?', () => {
                 "accept" : 'application/json',
                 "Content-Type" : 'application/json',
             },
-            /*params:{
-                "{id}" : 4,
-            },*/
         }).as('response')
-
+        
         cy.get('@response').then(res =>{
             cy.expect(res.status).to.be.eq(200)
             cy.expect(res.body.id).to.be.eq(4)
@@ -41,9 +38,26 @@ describe('Me Conta?', () => {
 
         cy.get('@response').then(res =>{
             cy.expect(res.status).to.be.eq(404)
-            //cy.expect(res.message).to.be.eq("Não encontrado")
-            //cy.expect(res.error).to.be.eq("Not Found")
-            
+            cy.expect(res.body.message).to.be.eq("Não encontrado")
+            cy.expect(res.body.error).to.be.eq("Not Found")
+        })
+    })
+
+    it('GET - Consulta usuário pelo id inválido', () => {
+        cy.request({
+            method: 'GET', 
+            url: 'https://me-conta-backend.herokuapp.com/usuario/teste',
+            failOnStatusCode: false,
+            headers:{ 
+                "accept" : 'application/json',
+                "Content-Type" : 'application/json',
+            },
+        }).as('response')
+
+        cy.get('@response').then(res =>{
+            cy.expect(res.status).to.be.eq(400)
+            cy.expect(res.body.message).to.be.eq("Validation failed (numeric string is expected)")
+            cy.expect(res.body.error).to.be.eq("Bad Request")
         })
     })
 })
