@@ -1,12 +1,14 @@
 /// <reference types="Cypress">
+import faker from 'faker'
+faker.locale = 'pt_BR'
 
 describe('Me Conta?', () =>{
-    let token;
-
-    beforeEach(() =>{  
+    let token
+    
+    beforeEach(()=>{
         cy.request({
-            method: 'POST',
-            url:'https://me-conta-backend.herokuapp.com/auth/login',
+            method:'POST',
+            url: 'https://me-conta-backend.herokuapp.com/auth/login',
             failOnStatusCode: false,
             headers:{
                 "accept" : 'application/json',
@@ -16,41 +18,63 @@ describe('Me Conta?', () =>{
                 "username": "teste@teste.com",
                 "password": "s#nh4Valida"
             },
-        }).as('response')
-
-        cy.get('@response').then(res =>{
-            cy.expect(res.status).to.be.eq(200)
-            cy.expect(res.body.token).to.be.not.null  
-            token = res.body.token
-            cy.log(token)
+        }).then(response =>{
+            token = response.body.token
         })
-        
-    })
+    })    
  
-    it('DELETE - Deletar usuário com sucesso', () => {
+    it('DELETE - Cria usuário e deleta o mesmo com sucesso', () => {
+        let idUser 
+        const email = faker.internet.email()
+        
         cy.request({
-            method: 'DELETE',
-            url:'https://me-conta-backend.herokuapp.com/usuario/delete/39',
+            method: 'POST',
+            url: 'https://me-conta-backend.herokuapp.com/usuario',
             failOnStatusCode: false,
-            headers:{
-                "access-token" : token,
+            headers:{ 
                 "accept" : 'application/json',
                 "Content-Type" : 'application/json'
             },
-        }).as('response')
-
-        cy.get('@response').then(res =>{
-            cy.expect(res.status).to.be.eq(204)
-            
+            body: {
+                
+                "senha": "s#nh4Valida",
+                "dataNascimento": "1988-03-09",
+                "telefone": "(81) 91234-5678",
+                "email": `email${email}`,
+                "nome": "Maria Silva",
+                "genero": "M",
+                "UF": "AC",
+                "cidade": "Acrelândia",
+                "tipoUsuario": "ATENDENTE"
+            }
+        }).then(response =>{
+            idUser = response.body.id
+            cy.log(idUser)
+            cy.request({
+                method: 'DELETE',
+                url:'https://me-conta-backend.herokuapp.com/usuario/' + `${idUser}`,
+                failOnStatusCode: false,
+                headers:{
+                    Authorization : `Bearer ${token}`,
+                    "accept" : 'application/json',
+                    "Content-Type" : 'application/json'
+                },
+            }).as('response')
+    
+            cy.get('@response').then(res =>{
+                cy.expect(res.status).to.be.eq(204)
+                
+            })
         })
     })
     
-    xit('DELETE - Deletar usuário sem estar logado', () => {
+    it('DELETE - Deletar usuário sem estar logado', () => {
         cy.request({
             method: 'DELETE',
-            url:'https://me-conta-backend.herokuapp.com/usuario/delete/39',
+            url:'https://me-conta-backend.herokuapp.com/usuario/3',
             failOnStatusCode: false,
             headers:{
+                Authorization : `Bearer teste`,
                 "accept" : 'application/json',
                 "Content-Type" : 'application/json'
             },
@@ -58,17 +82,17 @@ describe('Me Conta?', () =>{
 
         cy.get('@response').then(res =>{
             cy.expect(res.status).to.be.eq(401)
-            cy.expect(res.body.error).to.be.eq("Unauthorized")
+            cy.expect(res.body.message).to.be.eq("Unauthorized")
         })
     })
 
-    xit('DELETE - Deletar usuário sem estar logado', () => {
+    it('DELETE - Deletar usuário que não existe', () => {
         cy.request({
             method: 'DELETE',
-            url:'https://me-conta-backend.herokuapp.com/usuario/delete/39',
+            url:'https://me-conta-backend.herokuapp.com/usuario/9999',
             failOnStatusCode: false,
             headers:{
-                "access-token" : token,
+                Authorization : `Bearer ${token}`,
                 "accept" : 'application/json',
                 "Content-Type" : 'application/json'
             },
@@ -79,6 +103,5 @@ describe('Me Conta?', () =>{
             cy.expect(res.body.message).to.be.eq("Não encontrado")
             cy.expect(res.body.error).to.be.eq("Not Found")
         })
-    })
-        
+    }) 
 })
