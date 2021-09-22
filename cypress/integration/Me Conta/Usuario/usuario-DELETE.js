@@ -26,7 +26,7 @@ describe('Me Conta?', () =>{
     it('DELETE - Cria usuário e deleta o mesmo com sucesso', () => {
         let idUser 
         const email = faker.internet.email()
-        
+
         cy.request({
             method: 'POST',
             url: 'https://me-conta-backend.herokuapp.com/usuario',
@@ -49,7 +49,7 @@ describe('Me Conta?', () =>{
             }
         }).then(response =>{
             idUser = response.body.id
-            cy.log(idUser)
+            
             cy.request({
                 method: 'DELETE',
                 url:'https://me-conta-backend.herokuapp.com/usuario/' + `${idUser}`,
