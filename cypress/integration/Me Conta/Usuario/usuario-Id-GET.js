@@ -1,6 +1,6 @@
 /// <reference types="Cypress">
 
-describe('Me Conta?', () => {
+describe('Me Conta ? - Usuário', () => {
     it('GET - Consulta usuário pelo id com sucesso', () => {
         cy.request({
             method: 'GET', 

@@ -1,6 +1,6 @@
 /// <reference types="Cypress">
 
-describe('Me Conta ?', () => {
+describe('Me Conta ? - Usuário', () => {
 
     let idmToken
     beforeEach(() => {

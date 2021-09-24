@@ -1,6 +1,6 @@
 /// <reference types="Cypress">
 
-describe('Me Conta ?', () => {
+describe('Me Conta ? - Usuário', () => {
 
         it('PATCH-Usuário Admnistrador - Usuário precisa estar logado', () => {
         cy.request({

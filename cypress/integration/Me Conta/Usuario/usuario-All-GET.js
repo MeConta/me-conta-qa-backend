@@ -1,7 +1,7 @@
 /// <reference types="Cypress">
 
 
-describe('Me Conta?',()=>{
+describe('Me Conta ? - Usuário',()=>{
 
     it('GET-Listar todos os usuários cadastrados',()=>{
         cy.request({
