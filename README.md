@@ -10,7 +10,7 @@
 
 - No terminal digitar o comando  `npm install cypress --save-dev` na sua pasta
 - Digitar `npx cypress open` para abrir o cypress
-- Digitar  `nom init -y` para criar o arquivo package.json
+- Digitar  `npm init -y` para criar o arquivo package.json
 
 # Instalação Lib Faker
 
