@@ -1,6 +1,6 @@
 /// <reference types="Cypress">
 
-describe('Me Conta?',()=>{
+describe('Me Conta ? - Default',()=>{
 
     it('Default',()=>{
         cy.request({
@@ -17,9 +17,5 @@ describe('Me Conta?',()=>{
             expect(res.headers['date']).to.be.not.null
             
         })
-
-        
     })
-
-    
 })

@@ -2,7 +2,7 @@
 import faker from 'faker'
 faker.locale = 'pt_BR'
 
-describe('Me Conta?',()=>{
+describe('Me Conta ? - Usuário',()=>{
 
     it('POST-Cadastro de usuário válido',()=>{
         const email = faker.internet.email()
@@ -76,8 +76,6 @@ it('POST-Cadastro de usuário já cadastrado',()=>{
         cy.expect(res.body.message).to.be.eq("E-mail duplicado")
     })
 
-    
-})
-    
+  })
     
 })
