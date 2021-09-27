@@ -1,6 +1,6 @@
 /// <reference types="Cypress">
 
-describe('Me Conta ? ',()=>{
+describe('Me Conta ? - Auth',()=>{
 
     it('POST-Login - Senha inválida',()=>{
         cy.request({

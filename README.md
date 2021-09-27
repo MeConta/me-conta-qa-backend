@@ -13,4 +13,17 @@
 
 # Instalação Lib Faker
 
-- npm i faker
+ npm i faker
+
+ # Instalação Allure report
+
+ - Executar o comando `npm install -D @shelex/cypress-allure-plugin`
+ - Executar o comando `npm install -—save-dev mocha-allure-reporter`
+
+# Rodar os testes e gerar o Allure report
+
+- Executar o comando `npx cypress run  --reporter mocha-allure-reporter`
+- Executar o comando para gerar o Allure Results `npx allure generate allure-results`
+- Executar o comando para abrir o Allure Report no navegador `npx allure open allure-report`
+- Executar o comando para limpar os relatórios `rm -r allure-results/ allure-report || true`
+
