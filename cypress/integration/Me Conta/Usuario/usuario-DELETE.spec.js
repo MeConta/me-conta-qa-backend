@@ -36,7 +36,6 @@ describe('Me Conta ? - Usuário', () =>{
                 "Content-Type" : 'application/json'
             },
             body: {
-                
                 "senha": "s#nh4Valida",
                 "dataNascimento": "1988-03-09",
                 "telefone": "(81) 91234-5678",
@@ -63,7 +62,6 @@ describe('Me Conta ? - Usuário', () =>{
     
             cy.get('@response').then(res =>{
                 cy.expect(res.status).to.be.eq(204)
-                
             })
         })
     })
