@@ -22,7 +22,7 @@ describe('Me Conta ? - Usuário', () => {
 
     })
 
-    it('PATCH-Usuário Admnistrador-Logado - Usuário com permissão', () => {
+    it.skip('PATCH-Usuário Admnistrador-Logado - Usuário com permissão', () => {
         cy.request({
             method: 'PATCH',
             url: 'https://me-conta-backend.herokuapp.com/usuario/61',

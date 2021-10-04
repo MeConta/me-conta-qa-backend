@@ -1,7 +1,11 @@
 /// <reference types="Cypress">
 
+
+describe('Me Conta ? - Usuário', () => {
+    it('GET - Consulta usuário pelo id com sucesso', () => {
 describe.skip('Me Conta ? - Usuário', () => {
     it('GET - Consulta usuário pelo id com sucesso', () => {
+
         cy.request({
             method: 'GET', 
             url: 'https://me-conta-backend.herokuapp.com/usuario/4',
@@ -25,7 +29,7 @@ describe.skip('Me Conta ? - Usuário', () => {
         })
     })
 
-    it('GET - Consulta usuário pelo id não existe', () => {
+    it.skip('GET - Consulta usuário pelo id não existe', () => {
         cy.request({
             method: 'GET', 
             url: 'https://me-conta-backend.herokuapp.com/usuario/9999',
@@ -43,7 +47,7 @@ describe.skip('Me Conta ? - Usuário', () => {
         })
     })
 
-    it('GET - Consulta usuário pelo id inválido', () => {
+    it.skip('GET - Consulta usuário pelo id inválido', () => {
         cy.request({
             method: 'GET', 
             url: 'https://me-conta-backend.herokuapp.com/usuario/teste',
