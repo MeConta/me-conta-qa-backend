@@ -4,7 +4,7 @@ faker.locale = 'pt_BR'
 
 describe('Me Conta ? - Usuário',()=>{
 
-    it('POST-Cadastro de usuário válido',()=>{
+    it.skip('POST-Cadastro de usuário válido',()=>{
         const email = faker.internet.email()
         cy.request({
             method: 'POST',
@@ -46,7 +46,7 @@ describe('Me Conta ? - Usuário',()=>{
         })
 
     })
-it('POST-Cadastro de usuário já cadastrado',()=>{
+it.skip('POST-Cadastro de usuário já cadastrado',()=>{
     cy.request({
         method: 'POST',
         url: 'https://me-conta-backend.herokuapp.com/usuario',

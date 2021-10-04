@@ -1,8 +1,7 @@
-/// <reference types="Cypress">
 import faker from 'faker'
 faker.locale = 'pt_BR'
 
-describe('Me Conta ? - Usuário', () =>{
+describe.skip('Me Conta ? - Usuário', () =>{
     let token
     
     beforeEach(()=>{
@@ -23,7 +22,7 @@ describe('Me Conta ? - Usuário', () =>{
         })
     })    
  
-    it('DELETE - Cria usuário e deleta o mesmo com sucesso', () => {
+    it.skip('DELETE - Cria usuário e deleta o mesmo com sucesso', () => {
         let idUser 
         const email = faker.internet.email()
 
@@ -68,7 +67,7 @@ describe('Me Conta ? - Usuário', () =>{
         })
     })
     
-    it('DELETE - Deletar usuário sem estar logado', () => {
+    it.skip('DELETE - Deletar usuário sem estar logado', () => {
         cy.request({
             method: 'DELETE',
             url:'https://me-conta-backend.herokuapp.com/usuario/3',
