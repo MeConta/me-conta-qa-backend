@@ -1,6 +1,6 @@
 /// <reference types="Cypress">
 
-describe.skip('Me Conta ? - Default',()=>{
+describe('Me Conta ? - Default',()=>{
 
     it('Default',()=>{
         cy.request({
