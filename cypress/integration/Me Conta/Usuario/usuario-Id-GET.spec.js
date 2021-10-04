@@ -2,10 +2,7 @@
 
 
 describe('Me Conta ? - Usuário', () => {
-    it('GET - Consulta usuário pelo id com sucesso', () => {
-describe.skip('Me Conta ? - Usuário', () => {
-    it('GET - Consulta usuário pelo id com sucesso', () => {
-
+    it.skip('GET - Consulta usuário pelo id com sucesso', () => {
         cy.request({
             method: 'GET', 
             url: 'https://me-conta-backend.herokuapp.com/usuario/4',
