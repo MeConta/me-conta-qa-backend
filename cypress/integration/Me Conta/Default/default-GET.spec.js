@@ -13,9 +13,8 @@ describe.skip('Me Conta ? - Default',()=>{
         }).as('response')
 
         cy.get('@response').then(res => {
-            expect(res.status).to.be.eq(204)
+            expect(res.status).to.be.eq(200)
             expect(res.headers['date']).to.be.not.null
-            
         })
     })
 })
