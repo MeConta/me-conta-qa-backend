@@ -2,7 +2,7 @@
 import faker from 'faker'
 faker.locale = 'pt_BR'
 
-describe('Me Conta ? - Usuário', () =>{
+describe.skip('Me Conta ? - Usuário', () =>{
     let token
     
     beforeEach(()=>{
