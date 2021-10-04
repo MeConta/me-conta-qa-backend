@@ -14,6 +14,9 @@
   },
   "scripts": {
     "test": "npx cypress run  --reporter mocha-allure-reporter",
+    "test-allure-results": "npx allure generate allure-results",
+    "test-allure-open": "npx allure open allure-report",
+    "test-allure-clean": "rm -r allure-results/ allure-report || true",
     "cy:open": "cypress open"
     
   },
