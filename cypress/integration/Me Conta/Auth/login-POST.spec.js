@@ -1,8 +1,8 @@
 /// <reference types="Cypress">
 
-describe('Me Conta ? - Auth',()=>{
+describe.skip('Me Conta ? - Auth',()=>{
 
-    it.skip('POST-Login - Senha inválida',()=>{
+    it('POST-Login - Senha inválida',()=>{
         cy.request({
             method: 'POST',
             url: 'https://me-conta-backend.herokuapp.com/auth/login',
@@ -23,7 +23,7 @@ describe('Me Conta ? - Auth',()=>{
         })
     })
 
-    it.skip('POST-Login - Logado com sucesso',()=>{
+    it('POST-Login - Logado com sucesso',()=>{
         cy.request({
             method: 'POST',
             url:'https://me-conta-backend.herokuapp.com/auth/login',

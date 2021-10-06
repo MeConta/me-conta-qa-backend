@@ -1,9 +1,9 @@
 // <reference types="Cypress">
 
 
-describe('Me Conta ? - Usuário',()=>{
+describe.skip('Me Conta ? - Usuário',()=>{
 
-    it.skip('GET-Listar todos os usuários cadastrados',()=>{
+    it('GET-Listar todos os usuários cadastrados',()=>{
         cy.request({
             method: 'GET',
             url: 'https://me-conta-backend.herokuapp.com/usuario',
