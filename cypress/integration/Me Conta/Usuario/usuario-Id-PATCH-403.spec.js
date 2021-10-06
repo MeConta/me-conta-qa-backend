@@ -1,6 +1,6 @@
 // <reference types="Cypress">
 
-describe('Me Conta ? - Usuário', () => {
+describe.skip('Me Conta ? - Usuário', () => {
 
     let idmToken
     beforeEach(() => {
@@ -22,7 +22,7 @@ describe('Me Conta ? - Usuário', () => {
         
     })
 
-    it.skip('PATCH-Usuário Atendente-ID-Logado - Usuário não tem pemissão ', () => {
+    it('PATCH-Usuário Atendente-ID-Logado - Usuário não tem pemissão ', () => {
         cy.request({
             method: 'PATCH',
             url: 'https://me-conta-backend.herokuapp.com/usuario/13',

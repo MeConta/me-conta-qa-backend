@@ -1,9 +1,9 @@
 /// <reference types="Cypress">
 
 
-describe('Me Conta ? - Usuário', () => {
+describe.skip('Me Conta ? - Usuário', () => {
 
-        it.skip('PATCH-Usuário Admnistrador - Usuário precisa estar logado', () => {
+        it('PATCH-Usuário Admnistrador - Usuário precisa estar logado', () => {
         cy.request({
             method: 'PATCH',
             url: 'https://me-conta-backend.herokuapp.com/usuario/61',
