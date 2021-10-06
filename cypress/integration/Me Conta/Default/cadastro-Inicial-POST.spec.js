@@ -53,7 +53,6 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(201)
-            
         })
     })
 
@@ -79,7 +78,6 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(201)
-            
         })
     })
 
@@ -131,7 +129,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(400)
-            cy.expect(res.body.message[0]).to.be.eq("tipo must be a valid enum value") 
+            cy.expect(res.body.message[0]).to.be.eq("tipo deve ser um valor de enum válido") 
         })
     })
 
@@ -183,7 +181,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(400)
-            cy.expect(res.body.message[0]).to.be.eq("nome must be longer than or equal to 2 characters")
+            cy.expect(res.body.message[0]).to.be.eq("nome deve ter mais de 2 caracteres")
             
         })
     })
@@ -209,7 +207,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(400)
-            cy.expect(res.body.message[0]).to.be.eq("nome deve ter ate 100 caracteres")
+            cy.expect(res.body.message[0]).to.be.eq("nome deve ter menos de 100 caracteres")
             
         })
     })
@@ -259,7 +257,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(400)
-            cy.expect(res.body.message[0]).to.be.eq("E-mail inválido.")
+            cy.expect(res.body.message[0]).to.be.eq("email deve ser um e-mail válido")
             
         })
     })
@@ -286,8 +284,8 @@ describe('Me conta ? - Cadastro Inicial', () => {
 
         cy.get('@response').then(res => {
             cy.expect(res.status).to.be.eq(400)
-            cy.expect(res.body.message[0]).to.be.eq("senha is too weak", "senha should not be empty")
-            
+            cy.expect(res.body.message[0]).to.be.eq("senha deve ser uma senha forte")
+            cy.expect(res.body.message[1]).to.be.eq("senha não pode ser vazio")
         })
     })
 })
