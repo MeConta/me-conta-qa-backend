@@ -188,6 +188,32 @@ describe('Me conta ? - Cadastro Inicial', () => {
         })
     })
 
+    it('Cadastro Inicial - Usuário com nome mais que 100 caracteres', () => {
+        const email = faker.internet.email()
+        
+        cy.request({
+            method: 'POST',
+            url: 'https://me-conta-backend.herokuapp.com/cadastro-inicial',
+            failOnStatusCode: false,
+            headers:{
+                "accept" : '*/*',
+                "Content-Type" : 'application/json'
+            },
+            body:{
+                "email": `${email}`,
+                "senha": "s#nh4Valida",
+                "nome": "NomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompletoNomeCompleto",
+                "tipo": 0
+            },
+        }).as('response')
+
+        cy.get('@response').then(res => {
+            cy.expect(res.status).to.be.eq(400)
+            cy.expect(res.body.message[0]).to.be.eq("nome deve ter ate 100 caracteres")
+            
+        })
+    })
+
     it('Cadastro Inicial - Usuário nome com espaços', () => {
         const email = faker.internet.email()
       
