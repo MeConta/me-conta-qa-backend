@@ -1,8 +1,7 @@
 /// <reference types="Cypress">
 
-describe('Me Conta ? - Default',()=>{
-
-    it('Default',()=>{
+describe('Me Conta ? - GET Default',()=>{
+    it('Default - Consulta get default',()=>{
         cy.request({
             method: 'GET',
             url: 'https://me-conta-backend.herokuapp.com/',

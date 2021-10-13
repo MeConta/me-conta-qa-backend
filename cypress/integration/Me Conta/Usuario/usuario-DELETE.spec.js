@@ -22,7 +22,7 @@ describe.skip('Me Conta ? - Usuário', () =>{
         })
     })    
  
-    it.skip('DELETE - Cria usuário e deleta o mesmo com sucesso', () => {
+    it('DELETE - Cria usuário e deleta o mesmo com sucesso', () => {
         let idUser 
         const email = faker.internet.email()
 
@@ -67,7 +67,7 @@ describe.skip('Me Conta ? - Usuário', () =>{
         })
     })
     
-    it.skip('DELETE - Deletar usuário sem estar logado', () => {
+    it('DELETE - Deletar usuário sem estar logado', () => {
         cy.request({
             method: 'DELETE',
             url:'https://me-conta-backend.herokuapp.com/usuario/3',
