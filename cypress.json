@@ -2,5 +2,5 @@
     "video": false,
     "screenshotOnRunFailure": false,
     "testFiles": "**/*.spec*",
-    "baseUrl": "http://localhost:3000"
+    "baseUrl": "https://me-conta-backend.herokuapp.com"
 }
