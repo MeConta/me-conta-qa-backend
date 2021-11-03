@@ -114,6 +114,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                     email
                 },
             }).should(({status, body}) => {
+                console.log('AAA', body);
                 expect(status).to.be.eq(409);
                 expect(body.message).to.be.eq("e-mail duplicado");
             });

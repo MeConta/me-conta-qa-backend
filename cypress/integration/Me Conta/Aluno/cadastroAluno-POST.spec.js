@@ -17,8 +17,12 @@ let token;
 describe('Me Conta ? - Cadastro Aluno', () => {
 
     beforeEach(() => {
-        getToken().then(_token => token = _token);
+        getToken();
     });
+
+    beforeEach(() => {
+        token = Cypress.env('token');
+    })
 
     it('Cadastro Aluno - Sucesso', () => {
         cy.request({
@@ -181,8 +185,12 @@ describe('Me Conta ? - Cadastro Aluno', () => {
 describe('Me Conta ? - Cadastro Aluno - Erro de credenciais', () => {
 
     beforeEach(() => {
-        getToken(1).then(_token => token = _token);
+        getToken(1);
     });
+    beforeEach(() => {
+        token = Cypress.env('token');
+    })
+
 
     it('Cadastro Aluno - Login com usuário perfil diferente de aluno', () => {
         cy.request({
