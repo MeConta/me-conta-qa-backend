@@ -1,45 +1,54 @@
 /// <reference types="Cypress">
 
-describe('Me Conta ? - Auth',()=>{
-    it('POST - Login - Logado com sucesso',()=>{
+import {getToken} from "../../../support/token";
+import {internet} from "faker/locale/pt_BR";
+
+describe('Me Conta ? - Auth',() => {
+
+    const req = {
+        username: internet.email(),
+        password: 's#nh4Valida'
+    }
+
+    before(() => {
+        getToken(0, {
+            email: req.username,
+            senha: req.password
+        });
+    });
+
+    it('POST - Login - Logado com sucesso',() => {
         cy.request({
             method: 'POST',
-            url:'https://me-conta-backend.herokuapp.com/auth/login',
+            url:'/auth/login',
             failOnStatusCode: false,
             headers:{
                 "accept" : 'application/json',
                 "Content-Type" : 'application/json'
             },
-            body:{
-                "username": "teste@teste.com",
-                "password": "s#nh4Valida"
-            },
-        }).as('response')
-
-        cy.get('@response').then(res =>{
-            cy.expect(res.status).to.be.eq(200)
-            cy.expect(res.body.token).to.be.not.null
+            body: req,
+        }).should(({status, body}) =>{
+            expect(status).to.be.eq(200)
+            expect(body['token']).to.be.not.null
         })
     })
 
     it('POST - Login - Senha inválida',()=>{
         cy.request({
             method: 'POST',
-            url: 'https://me-conta-backend.herokuapp.com/auth/login',
+            url: '/auth/login',
             failOnStatusCode: false,
             headers:{
                 "accept" : 'application/json',
                 "Content-Type" : 'application/json'
             },
-            body:{
-                "username": "teste@teste.com",
-                "password": "s3nN4val!d@"
+            body: {
+                ...req,
+                password: 'invalida'
             },
-        }).as('response')
-
-        cy.get('@response').then(res=>{
-            cy.expect(res.status).to.be.eq(401)
-            cy.expect(res.body.message).to.be.eq("Unauthorized")
-        })
-    })
-})
+        }).should(({status, body}) => {
+            expect(status).to.be.eq(401);
+            expect(body.message).to.be.eq("Unauthorized");
+        });
+    });
+});

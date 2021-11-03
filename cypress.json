@@ -1,4 +1,5 @@
 {
     "video": false,
-    "testFiles": "**/*.spec*"
+    "testFiles": "**/*.spec*",
+    "baseUrl": "https://me-conta-backend.herokuapp.com"
 }

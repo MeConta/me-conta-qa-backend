@@ -4,13 +4,15 @@
   "description": "- Automatizar Backend Me Conta ?",
   "main": "index.js",
   "dependencies": {
-    "allure-commandline": "^2.13.8",
-    "fake": "^0.2.2",
     "faker": "^5.5.3",
-    "mocha-allure-reporter": "^1.4.0"
+    "moment": "^2.29.1"
   },
   "devDependencies": {
-    "cypress": "^8.5.0"
+    "@shelex/cypress-allure-plugin": "^2.19.5",
+    "@types/faker": "^5.5.9",
+    "allure-commandline": "^2.13.8",
+    "cypress": "^8.7.0",
+    "mocha-allure-reporter": "^1.4.0"
   },
   "scripts": {
     "test": "npx cypress run  --reporter mocha-allure-reporter",
