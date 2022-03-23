@@ -1,6 +1,6 @@
 /// <reference types="Cypress" >
 
-import {getToken} from "../../../support/token";
+import faker from "@faker-js/faker";
 
 const req = {
     "telefone": "11912345678",
@@ -12,17 +12,16 @@ const req = {
     "escolaridade": 0
 }
 
-let token;
-
 describe('Me Conta ? - Cadastro Aluno', () => {
 
-    beforeEach(() => {
-        getToken();
+    before(() => {
+        const usuario = {
+            email: faker.internet.email(),
+            senha: 's#nh4Valida',
+        }
+        cy.cadastroInicial(usuario);
+        cy.login(usuario.email, usuario.senha);
     });
-
-    beforeEach(() => {
-        token = Cypress.env('token');
-    })
 
     it('Cadastro Aluno - Sucesso', () => {
         cy.request({
@@ -30,12 +29,12 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
             body: req,
-        }).should(({status}) => {
+        }).should(({ status }) => {
             expect(status).to.be.eq(201);
         })
     })
@@ -46,7 +45,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -54,7 +53,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "telefone": "a0000-0000",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido")
         })
@@ -66,7 +65,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -74,7 +73,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "dataNascimento": "00/00/0000",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("dataNascimento deve ser uma data")
         })
@@ -86,7 +85,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -94,7 +93,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "telefone": "",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido")
             expect(body.message[1]).to.be.eq("telefone não deve ser vazio")
@@ -107,7 +106,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -115,7 +114,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "dataNascimento": "",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("dataNascimento deve ser uma data")
         })
@@ -127,7 +126,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -135,7 +134,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "genero": "",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("genero deve ser um valor de enum válido")
         })
@@ -147,7 +146,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -155,7 +154,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "tipoEscola": " ",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("tipoEscola deve ser um valor de enum válido")
         })
@@ -167,7 +166,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -175,7 +174,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
                 ...req,
                 "escolaridade": " "
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("escolaridade deve ser um valor de enum válido")
         })
@@ -184,13 +183,14 @@ describe('Me Conta ? - Cadastro Aluno', () => {
 
 describe('Me Conta ? - Cadastro Aluno - Erro de credenciais', () => {
 
-    beforeEach(() => {
-        getToken(1);
+    before(() => {
+        const usuario = {
+            email: faker.internet.email(),
+            senha: 's#nh4Valida',
+        }
+        cy.cadastroInicial(usuario, 1);
+        cy.login(usuario.email, usuario.senha);
     });
-    beforeEach(() => {
-        token = Cypress.env('token');
-    })
-
 
     it('Cadastro Aluno - Login com usuário perfil diferente de aluno', () => {
         cy.request({
@@ -198,12 +198,12 @@ describe('Me Conta ? - Cadastro Aluno - Erro de credenciais', () => {
             url: '/cadastro-aluno',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
             body: req,
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(403)
             expect(body.message).to.be.eq("Forbidden resource")
         });

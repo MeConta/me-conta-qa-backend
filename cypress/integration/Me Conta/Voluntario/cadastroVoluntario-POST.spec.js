@@ -1,10 +1,8 @@
 /// <reference types="Cypress" >
 
-import {lorem, date} from "faker/locale/pt_BR";
 import moment from 'moment';
-import {getToken} from "../../../support/token";
+import { faker } from '@faker-js/faker';
 
-let token;
 const req = () => ({
     "telefone": "11912345678",
     "dataNascimento": moment().subtract(18, 'years').format('YYYY-MM-DD'),
@@ -12,41 +10,39 @@ const req = () => ({
     "UF": "AC",
     "genero": "ND",
     "formado": true,
-    "anoFormacao": +moment(date.past()).format('YYYY'),
+    "anoFormacao": +moment(faker.date.past()).format('YYYY'),
     "areaAtuacao": "psicologo",
-    "crp": lorem.words(3),
+    "crp": faker.lorem.words(3),
     "instituicao": "Faculdade",
     "especializacoes": "Especializações",
     "tipo": 1,
     "frentes": [0, 1, 2],
-    "bio": lorem.paragraphs(3)
+    "bio": faker.lorem.paragraphs(3)
 });
 
 describe('Me Conta ? - Cadastro Voluntário', () => {
 
-
-
     beforeEach(() => {
-        getToken(1);
+        const usuario = {
+            email: faker.internet.email(),
+            senha: 's#nh4Valida',
+        }
+        cy.cadastroInicial(usuario, 1);
+        cy.login(usuario.email, usuario.senha);
     });
 
-    beforeEach(() => {
-        token = Cypress.env('token');
-    })
-
     it('Cadastro Voluntário - Sucesso', () => {
-        console.log('TOK', token);
         cy.request({
             method: 'POST',
             url: '/cadastro-voluntario',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
             body: req(),
-        }).should(({status}) => {
+        }).should(({ status }) => {
             expect(status).to.be.eq(201)
         });
     });
@@ -57,7 +53,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
             url: '/cadastro-voluntario',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -65,7 +61,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
                 ...req(),
                 "telefone": "a0000-0000",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido");
         });
@@ -77,7 +73,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
             url: '/cadastro-voluntario',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -85,7 +81,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
                 ...req(),
                 telefone: "",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido")
             expect(body.message[1]).to.be.eq("telefone não deve ser vazio")
@@ -98,7 +94,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
             url: '/cadastro-voluntario',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -106,7 +102,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
                 ...req(),
                 "crp": "",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("crp não deve ser vazio");
         });
@@ -118,7 +114,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
             url: '/cadastro-voluntario',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
@@ -126,7 +122,7 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
                 ...req(),
                 dataNascimento: moment().format('YYYY-MM-DD'),
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("dataNascimento deve ser superior a 18 anos");
         });
@@ -135,15 +131,15 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
 });
 
 describe('Me Conta ? - Cadastro Voluntário - Erro de credenciais', () => {
-    let token
 
     beforeEach(() => {
-        getToken(0);
-    })
-
-    beforeEach(() => {
-        token = Cypress.env('token');
-    })
+        const usuario = {
+            email: faker.internet.email(),
+            senha: 's#nh4Valida',
+        }
+        cy.cadastroInicial(usuario);
+        cy.login(usuario.email, usuario.senha);
+    });
 
     it('Cadastro Voluntário - Login com usuário perfil aluno', () => {
         cy.request({
@@ -151,12 +147,12 @@ describe('Me Conta ? - Cadastro Voluntário - Erro de credenciais', () => {
             url: '/cadastro-voluntario',
             failOnStatusCode: false,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${Cypress.env('token')}`,
                 "accept": '*/*',
                 "Content-Type": 'application/json'
             },
             body: req(),
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(403)
             expect(body.message).to.be.eq("Forbidden resource")
         })

@@ -1,52 +1,52 @@
 /// <reference types="Cypress">
 
-import {getToken} from "../../../support/token";
-import {internet} from "faker/locale/pt_BR";
+import { faker } from '@faker-js/faker'
 
-describe('Me Conta ? - Auth',() => {
-
+describe('Me Conta ? - Auth', () => {
     const req = {
-        username: internet.email(),
+        username: faker.internet.email(),
         password: 's#nh4Valida'
     }
 
     before(() => {
-        getToken(0, {
+        const usuario = {
             email: req.username,
             senha: req.password
-        });
+        }
+        cy.cadastroInicial(usuario);
+        cy.login(req.username, req.password);
     });
 
-    it('POST - Login - Logado com sucesso',() => {
+    it('POST - Login - Logado com sucesso', () => {
         cy.request({
             method: 'POST',
-            url:'/auth/login',
+            url: '/auth/login',
             failOnStatusCode: false,
-            headers:{
-                "accept" : 'application/json',
-                "Content-Type" : 'application/json'
+            headers: {
+                "accept": 'application/json',
+                "Content-Type": 'application/json'
             },
             body: req,
-        }).should(({status, body}) =>{
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(200)
             expect(body['token']).to.be.not.null
         })
     })
 
-    it('POST - Login - Senha inválida',()=>{
+    it('POST - Login - Senha inválida', () => {
         cy.request({
             method: 'POST',
             url: '/auth/login',
             failOnStatusCode: false,
-            headers:{
-                "accept" : 'application/json',
-                "Content-Type" : 'application/json'
+            headers: {
+                "accept": 'application/json',
+                "Content-Type": 'application/json'
             },
             body: {
                 ...req,
                 password: 'invalida'
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(401);
             expect(body.message).to.be.eq("Unauthorized");
         });

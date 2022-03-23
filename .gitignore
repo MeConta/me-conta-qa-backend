@@ -5,3 +5,4 @@ video
 /allure-report/
 
 /.idea/
+cypress/**/.DS_Store

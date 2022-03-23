@@ -1,12 +1,12 @@
 /// <reference types="Cypress" >
 
-import {internet, name, lorem} from 'faker/locale/pt_BR';
+import { faker } from '@faker-js/faker'
 
 const senha = "s#nh4Valida";
 
 const req = () => ({
-    nome: name.findName(),
-    email: internet.email(),
+    nome: faker.name.findName(),
+    email: faker.internet.email(),
     senha,
     tipo: 0
 });
@@ -24,7 +24,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 "Content-Type": 'application/json'
             },
             body: req(),
-        }).should(({status}) => {
+        }).should(({ status }) => {
             expect(status).to.be.eq(201);
         });
     });
@@ -42,7 +42,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 ...req(),
                 tipo: 1
             },
-        }).should(({status}) => {
+        }).should(({ status }) => {
             expect(status).to.be.eq(201);
         });
     });
@@ -61,7 +61,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 ...req(),
                 "tipo": 2
             },
-        }).should(({status}) => {
+        }).should(({ status }) => {
             expect(status).to.be.eq(201);
         });
     });
@@ -80,7 +80,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 ...req(),
                 "tipo": 999
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("tipo deve ser um valor de enum válido")
         });
@@ -97,9 +97,9 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 "Content-Type": 'application/json'
             },
             body: req(),
-        }).then(({body}) => {
+        }).then(({ body }) => {
 
-            const {email} = body;
+            const { email } = body;
 
             cy.request({
                 method: 'POST',
@@ -113,8 +113,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                     ...req(),
                     email
                 },
-            }).should(({status, body}) => {
-                console.log('AAA', body);
+            }).should(({ status, body }) => {
                 expect(status).to.be.eq(409);
                 expect(body.message).to.be.eq("e-mail duplicado");
             });
@@ -132,11 +131,11 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 "Content-Type": 'application/json'
             },
             body: {
-               ...req(),
+                ...req(),
                 "nome": "M",
                 "tipo": 0
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("nome deve ter mais de 2 caracteres");
         });
@@ -154,9 +153,9 @@ describe('Me conta ? - Cadastro Inicial', () => {
             },
             body: {
                 ...req(),
-                nome: lorem.words(100).substring(100),
+                nome: faker.lorem.words(100).substring(100),
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("nome deve ter menos de 100 caracteres");
         });
@@ -176,7 +175,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 ...req(),
                 "nome": "  ",
             },
-        }).should(({status}) => {
+        }).should(({ status }) => {
             expect(status).to.be.eq(400);
         });
     })
@@ -195,7 +194,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 ...req(),
                 "email": "teste",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("email deve ser um e-mail válido");
         });
@@ -215,7 +214,7 @@ describe('Me conta ? - Cadastro Inicial', () => {
                 ...req(),
                 "senha": "",
             },
-        }).should(({status, body}) => {
+        }).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("senha deve ser uma senha forte");
             expect(body.message[1]).to.be.eq("senha não pode ser vazio");
