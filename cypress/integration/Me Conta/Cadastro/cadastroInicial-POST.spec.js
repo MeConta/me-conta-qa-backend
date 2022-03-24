@@ -1,119 +1,38 @@
-/// <reference types="Cypress" >
+/// <reference types="Cypress" />
 
 import { faker } from '@faker-js/faker'
 
-const senha = "s#nh4Valida";
-
-const req = () => ({
-    nome: faker.name.findName(),
-    email: faker.internet.email(),
-    senha,
-    tipo: 0
-});
+let usuario;
 
 describe('Me conta ? - Cadastro Inicial', () => {
+    beforeEach(() => {
+        usuario = {
+            nome: faker.name.findName(),
+            email: faker.internet.email(),
+            senha: "s#nh4Valida",
+            tipo: 0
+        };
+    })
 
-    it('Cadastro Inicial - Sucesso - Tipo 0', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: req(),
-        }).should(({ status }) => {
-            expect(status).to.be.eq(201);
-        });
-    });
-
-    it('Cadastro Inicial - Sucesso - Tipo 1 ', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                tipo: 1
-            },
-        }).should(({ status }) => {
-            expect(status).to.be.eq(201);
-        });
-    });
-
-    it('Cadastro Inicial - Sucesso - Tipo 2', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "tipo": 2
-            },
-        }).should(({ status }) => {
-            expect(status).to.be.eq(201);
-        });
-    });
+    const tipos = [0, 1, 2];
+    tipos.forEach((tipo) => {
+        it(`Cadastro Inicial - Sucesso - Tipo ${tipo}`, () => {
+            cy.cadastroInicial(usuario, tipo).should(({ status }) => {
+                expect(status).to.be.eq(201);
+            });
+        })
+    })
 
     it('Cadastro Inicial - Tipo não existente', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "tipo": 999
-            },
-        }).should(({ status, body }) => {
+        cy.cadastroInicial(usuario, 999, false).should(({ status, body }) => {
             expect(status).to.be.eq(400)
             expect(body.message[0]).to.be.eq("tipo deve ser um valor de enum válido")
         });
     });
 
     it('Cadastro Inicial - Usuário com e-mail já cadastrado', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: req(),
-        }).then(({ body }) => {
-
-            const { email } = body;
-
-            cy.request({
-                method: 'POST',
-                url: '/cadastro-inicial',
-                failOnStatusCode: false,
-                headers: {
-                    "accept": '*/*',
-                    "Content-Type": 'application/json'
-                },
-                body: {
-                    ...req(),
-                    email
-                },
-            }).should(({ status, body }) => {
+        cy.cadastroInicial(usuario, 0, false).then(() => {
+            cy.cadastroInicial(usuario, 0, false).should(({ status, body }) => {
                 expect(status).to.be.eq(409);
                 expect(body.message).to.be.eq("e-mail duplicado");
             });
@@ -121,100 +40,40 @@ describe('Me conta ? - Cadastro Inicial', () => {
     })
 
     it('Cadastro Inicial - Usuário com nome menor que 2 caracteres', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "nome": "M",
-                "tipo": 0
-            },
-        }).should(({ status, body }) => {
+        const usuarioWithInvalidNome = { ...usuario, nome: "M" };
+        cy.cadastroInicial(usuarioWithInvalidNome, 0, false).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("nome deve ter mais de 2 caracteres");
         });
     });
 
     it('Cadastro Inicial - Usuário com nome mais que 100 caracteres', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                nome: faker.lorem.words(100).substring(100),
-            },
-        }).should(({ status, body }) => {
+        const usuarioWithLongNome = { ...usuario, nome: faker.lorem.words(100).substring(100) };
+        cy.cadastroInicial(usuarioWithLongNome, 0, false).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("nome deve ter menos de 100 caracteres");
         });
     });
 
     it('Cadastro Inicial - Usuário nome com espaços', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "nome": "  ",
-            },
-        }).should(({ status }) => {
+        const usuarioNomeComEspacos = { ...usuario, nome: "  " };
+        cy.cadastroInicial(usuarioNomeComEspacos, 0, false).should(({ status }) => {
             expect(status).to.be.eq(400);
         });
     })
 
     it('Cadastro Inicial - Usuário com e-mail inválido', () => {
-
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "email": "teste",
-            },
-        }).should(({ status, body }) => {
+        const usuarioWithInvalidEmail = { ...usuario, email: "teste" };
+        cy.cadastroInicial(usuarioWithInvalidEmail, 0, false).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("email deve ser um e-mail válido");
         });
     });
 
-    it('Cadastro Inicial - Usuário sem inserir senha', () => {
 
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-inicial',
-            failOnStatusCode: false,
-            headers: {
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "senha": "",
-            },
-        }).should(({ status, body }) => {
+    it('Cadastro Inicial - Usuário sem inserir senha', () => {
+        const usuarioWithoutSenha = { ...usuario, "senha": "" };
+        cy.cadastroInicial(usuarioWithoutSenha, 0, false).should(({ status, body }) => {
             expect(status).to.be.eq(400);
             expect(body.message[0]).to.be.eq("senha deve ser uma senha forte");
             expect(body.message[1]).to.be.eq("senha não pode ser vazio");

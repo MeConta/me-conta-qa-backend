@@ -18,6 +18,7 @@ describe('Me Conta ? - Cadastro Aluno', () => {
         const usuario = {
             email: faker.internet.email(),
             senha: 's#nh4Valida',
+            nome: faker.name.findName()
         }
         cy.cadastroInicial(usuario);
         cy.login(usuario.email, usuario.senha);
@@ -187,6 +188,7 @@ describe('Me Conta ? - Cadastro Aluno - Erro de credenciais', () => {
         const usuario = {
             email: faker.internet.email(),
             senha: 's#nh4Valida',
+            nome: faker.name.findName()
         }
         cy.cadastroInicial(usuario, 1);
         cy.login(usuario.email, usuario.senha);

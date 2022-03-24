@@ -1,5 +1,4 @@
-/// <reference types="Cypress" >
-import { faker } from '@faker-js/faker';
+/// <reference types="Cypress" />
 
 Cypress.Commands.add('login', (username, password) => {
     cy.request('POST', '/auth/login', { username, password })
@@ -10,16 +9,30 @@ Cypress.Commands.add('login', (username, password) => {
         })
 })
 
-Cypress.Commands.add('cadastroInicial', (usuario, tipo = 0) => {
-    usuario = {
-        email: usuario?.email || faker.internet.email(),
-        senha: usuario?.senha || 's#nh4Valida',
-        nome: usuario?.nome || faker.name.findName()
-    }
+Cypress.Commands.add('cadastroInicial', (usuario, tipo = 0, failOnStatusCode = true) => {
     const { email, senha, nome } = usuario;
+    return cy.request({
+        method: 'POST',
+        url: '/cadastro-inicial',
+        failOnStatusCode: failOnStatusCode,
+        headers: {
+            "accept": '*/*',
+            "Content-Type": 'application/json'
+        },
+        body: { email, senha, nome, tipo }
+    });
+})
 
-    cy.request('POST', '/cadastro-inicial', { email, senha, nome, tipo })
-        .then(response => {
-            expect(response.status).to.equal(201);
-        })
+Cypress.Commands.add('cadastroVoluntario', (voluntario, token, failOnStatusCode = true) => {
+    return cy.request({
+        method: 'POST',
+        url: '/cadastro-voluntario',
+        failOnStatusCode: failOnStatusCode,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "accept": '*/*',
+            "Content-Type": 'application/json'
+        },
+        body: voluntario,
+    })
 })

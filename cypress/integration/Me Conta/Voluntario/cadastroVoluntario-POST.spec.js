@@ -1,9 +1,9 @@
-/// <reference types="Cypress" >
+/// <reference types="Cypress" />
 
 import moment from 'moment';
 import { faker } from '@faker-js/faker';
 
-const req = () => ({
+const generateVoluntario = () => ({
     "telefone": "11912345678",
     "dataNascimento": moment().subtract(18, 'years').format('YYYY-MM-DD'),
     "cidade": "Acrelândia",
@@ -26,106 +26,70 @@ describe('Me Conta ? - Cadastro Voluntário', () => {
         const usuario = {
             email: faker.internet.email(),
             senha: 's#nh4Valida',
+            nome: faker.name.findName()
         }
         cy.cadastroInicial(usuario, 1);
         cy.login(usuario.email, usuario.senha);
     });
 
     it('Cadastro Voluntário - Sucesso', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-voluntario',
-            failOnStatusCode: false,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`,
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: req(),
-        }).should(({ status }) => {
-            expect(status).to.be.eq(201)
-        });
+        cy.cadastroVoluntario(generateVoluntario(), Cypress.env('token'))
+            .should(({ status }) => {
+                expect(status).to.be.eq(201);
+            });
     });
 
     it('Cadastro Voluntário - Telefone inserido no formato errado', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-voluntario',
-            failOnStatusCode: false,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`,
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "telefone": "a0000-0000",
-            },
-        }).should(({ status, body }) => {
-            expect(status).to.be.eq(400);
-            expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido");
-        });
+        const voluntarioTelefoneErrado = {
+            ...generateVoluntario(),
+            "telefone": "a0000-0000"
+        };
+
+        cy.cadastroVoluntario(voluntarioTelefoneErrado, Cypress.env('token'), false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(400);
+                expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido");
+            });
     });
 
     it('Cadastro Voluntário - Campo telefone vazio', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-voluntario',
-            failOnStatusCode: false,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`,
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                telefone: "",
-            },
-        }).should(({ status, body }) => {
-            expect(status).to.be.eq(400)
-            expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido")
-            expect(body.message[1]).to.be.eq("telefone não deve ser vazio")
-        });
+        const voluntarioTelefoneVazio = {
+            ...generateVoluntario(),
+            telefone: ""
+        };
+
+        cy.cadastroVoluntario(voluntarioTelefoneVazio, Cypress.env('token'), false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(400)
+                expect(body.message[0]).to.be.eq("telefone deve ser um telefone válido")
+                expect(body.message[1]).to.be.eq("telefone não deve ser vazio")
+            });
     });
 
     it('Cadastro Voluntário - Campo CRP vazio', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-voluntario',
-            failOnStatusCode: false,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`,
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                "crp": "",
-            },
-        }).should(({ status, body }) => {
-            expect(status).to.be.eq(400);
-            expect(body.message[0]).to.be.eq("crp não deve ser vazio");
-        });
+        const voluntarioCRPVazio = {
+            ...generateVoluntario(),
+            "crp": ""
+        };
+
+        cy.cadastroVoluntario(voluntarioCRPVazio, Cypress.env('token'), false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(400);
+                expect(body.message[0]).to.be.eq("crp não deve ser vazio");
+            });
     });
 
     it('Cadastro Voluntário - Menor de 18 anos', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-voluntario',
-            failOnStatusCode: false,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`,
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: {
-                ...req(),
-                dataNascimento: moment().format('YYYY-MM-DD'),
-            },
-        }).should(({ status, body }) => {
-            expect(status).to.be.eq(400);
-            expect(body.message[0]).to.be.eq("dataNascimento deve ser superior a 18 anos");
-        });
+        const voluntarioMenor18 = {
+            ...generateVoluntario(),
+            dataNascimento: moment().format('YYYY-MM-DD')
+        };
+
+        cy.cadastroVoluntario(voluntarioMenor18, Cypress.env('token'), false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(400);
+                expect(body.message[0]).to.be.eq("dataNascimento deve ser superior a 18 anos");
+            });
     });
 
 });
@@ -136,25 +100,18 @@ describe('Me Conta ? - Cadastro Voluntário - Erro de credenciais', () => {
         const usuario = {
             email: faker.internet.email(),
             senha: 's#nh4Valida',
+            nome: faker.name.findName()
         }
+        // same but with type = 0
         cy.cadastroInicial(usuario);
         cy.login(usuario.email, usuario.senha);
     });
 
     it('Cadastro Voluntário - Login com usuário perfil aluno', () => {
-        cy.request({
-            method: 'POST',
-            url: '/cadastro-voluntario',
-            failOnStatusCode: false,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`,
-                "accept": '*/*',
-                "Content-Type": 'application/json'
-            },
-            body: req(),
-        }).should(({ status, body }) => {
-            expect(status).to.be.eq(403)
-            expect(body.message).to.be.eq("Forbidden resource")
-        })
+        cy.cadastroVoluntario(generateVoluntario(), Cypress.env('token'), false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(403);
+                expect(body.message).to.be.eq("Forbidden resource");
+            })
     })
 })

@@ -5,13 +5,15 @@ import { faker } from '@faker-js/faker'
 describe('Me Conta ? - Auth', () => {
     const req = {
         username: faker.internet.email(),
-        password: 's#nh4Valida'
+        password: 's#nh4Valida',
+        nome: faker.name.findName()
     }
 
     before(() => {
         const usuario = {
             email: req.username,
-            senha: req.password
+            senha: req.password,
+            nome: req.nome
         }
         cy.cadastroInicial(usuario);
         cy.login(req.username, req.password);
