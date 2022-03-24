@@ -36,3 +36,17 @@ Cypress.Commands.add('cadastroVoluntario', (voluntario, token, failOnStatusCode 
         body: voluntario,
     })
 })
+
+Cypress.Commands.add('cadastroAluno', (aluno, token, failOnStatusCode = true) => {
+    return cy.request({
+        method: 'POST',
+        url: '/cadastro-aluno',
+        failOnStatusCode: failOnStatusCode,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "accept": '*/*',
+            "Content-Type": 'application/json'
+        },
+        body: aluno,
+    });
+})
