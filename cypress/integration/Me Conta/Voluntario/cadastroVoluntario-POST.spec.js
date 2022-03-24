@@ -102,7 +102,7 @@ describe('Me Conta ? - Cadastro Voluntário - Erro de credenciais', () => {
             senha: 's#nh4Valida',
             nome: faker.name.findName()
         }
-        // same but with type = 0
+        // same but with type = 0 (aluno)
         cy.cadastroInicial(usuario);
         cy.login(usuario.email, usuario.senha);
     });
@@ -112,6 +112,14 @@ describe('Me Conta ? - Cadastro Voluntário - Erro de credenciais', () => {
             .should(({ status, body }) => {
                 expect(status).to.be.eq(403);
                 expect(body.message).to.be.eq("Forbidden resource");
-            })
+            });
     })
+
+    it('Cadastro Voluntário - Token de autorização ausente', () => {
+        cy.cadastroAluno(generateVoluntario(), '', false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(401);
+                expect(body.message).to.be.eq("Unauthorized");
+            });
+    });
 })

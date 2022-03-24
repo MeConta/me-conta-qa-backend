@@ -143,4 +143,12 @@ describe('Me Conta ? - Cadastro Aluno - Erro de credenciais', () => {
                 expect(body.message).to.be.eq("Forbidden resource");
             });
     });
+
+    it('Cadastro Aluno - Token de autorização ausente', () => {
+        cy.cadastroAluno(aluno, '', false)
+            .should(({ status, body }) => {
+                expect(status).to.be.eq(401);
+                expect(body.message).to.be.eq("Unauthorized");
+            });
+    });
 })
