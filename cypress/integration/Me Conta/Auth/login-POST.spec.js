@@ -3,9 +3,11 @@
 import { faker } from '@faker-js/faker'
 
 describe('Me Conta ? - Auth', () => {
+    const senhaValida = 's#nh4Valida';
+    const senhaInvalida = 'invalida';
     const req = {
         username: faker.internet.email(),
-        password: 's#nh4Valida',
+        password: senhaValida,
         nome: faker.name.findName()
     }
 
@@ -46,7 +48,7 @@ describe('Me Conta ? - Auth', () => {
             },
             body: {
                 ...req,
-                password: 'invalida'
+                password: senhaInvalida
             },
         }).should(({ status, body }) => {
             expect(status).to.be.eq(401);
