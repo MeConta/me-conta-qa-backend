@@ -1,6 +1,0 @@
-{
-    "video": false,
-    "screenshotOnRunFailure": false,
-    "testFiles": "**/*.spec*",
-    "baseUrl": "https://me-conta-backend.herokuapp.com"
-}
